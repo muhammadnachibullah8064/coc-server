@@ -1,0 +1,46 @@
+{
+  "Barbarian King": [
+    "Barbarian Puppet",
+    "Rage Vial",
+    "Earthquake Boots",
+    "Vampstache",
+    "Giant Gauntlet",
+    "Spiky Ball",
+    "Snake Bracelet"
+  ],
+  "Archer Queen": [
+    "Archer Puppet",
+    "Invisibility Vial",
+    "Giant Arrow",
+    "Healer Puppet",
+    "Frozen Arrow",
+    "Magic Mirror",
+    "Action Figure"
+  ],
+  "Grand Warden": [
+    "Eternal Tome",
+    "Life Gem",
+    "Rage Gem",
+    "Healing Tome",
+    "Fireball",
+    "Lavaloon Puppet",
+    "Heroic Torch"
+  ],
+  "Royal Champion": [
+    "Royal Gem",
+    "Seeking Shield",
+    "Hog Rider Puppet",
+    "Haste Vial",
+    "Rocket Spear",
+    "Electro Boots",
+    "Frost Flake"
+  ],
+  "Minion Prince": [
+    "Henchmen Puppet",
+    "Dark Orb",
+    "Metal Pants",
+    "Noble Iron",
+    "Dark Crown",
+    "Meteor Staff"
+  ]
+}

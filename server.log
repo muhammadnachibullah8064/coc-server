@@ -1,0 +1,16 @@
+INFO:     Started server process [42964]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+ERROR:    [Errno 98] error while attempting to bind on address ('127.0.0.1INFO:     103.156.189.45:0 - "GET /docs HTTP/1.1" 200 OK
+INFO:     103.156.189.45:0 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     103.156.189.45:0 - "GET /player/KAHFFHFA HTTP/1.1" 403 Forbidden
+INFO:     103.156.189.45:0 - "GET /player/GG92RR99Y HTTP/1.1" 403 Forbidden
+INFO:     103.156.189.45:0 - "GET /player/GG92RR99Y HTTP/1.1" 403 Forbidden
+INFO:     103.156.189.45:0 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     103.156.189.45:0 - "GET /player/GG92RR99Y HTTP/1.1" 403 Forbidden
+INFO:     103.156.189.45:0 - "GET /player/GG92RR99Y HTTP/1.1" 403 Forbidden
+INFO:     103.156.189.45:0 - "GET /player/GG92RR99Y HTTP/1.1" 403 Forbidden
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [42507]
