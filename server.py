@@ -87,6 +87,24 @@ def get_clan(tag: str):
     return JSONResponse(data)
 
 
+# ---------------- current war ----------------
+
+
+@app.get("/currentwar/{tag}")
+def get_current_war(tag: str):
+    tag_norm = normalize_tag(tag)
+
+    try:
+        data = coc_get(f"/clans/{tag_norm}/currentwar")
+        return JSONResponse(data)
+
+    except HTTPException as e:
+        # Clan not in war → nicer response
+        if e.status_code == 404:
+            return {"state": "notInWar"}
+        raise e
+
+
 # ---------------- hero routes ----------------
 
 
