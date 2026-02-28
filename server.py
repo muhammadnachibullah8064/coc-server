@@ -73,11 +73,28 @@ def health():
     return {"status": "ok"}
 
 
+# ---------------- Players ----------------
 @app.get("/player/{tag}")
 def get_player(tag: str):
     tag = normalize_tag(tag)
     data = coc_get(f"/players/{tag}")
     return JSONResponse(data)
+
+
+# ---------------- Top Players ----------------
+@app.get("/top/players/{location}")
+def get_top_players(location: str):
+
+    location = location.strip().lower()
+
+    try:
+        data = coc_get(f"/locations/{location}/rankings/players")
+        return JSONResponse(data)
+
+    except HTTPException as e:
+        if e.status_code == 404:
+            return {"error": "Invalid location or no data"}
+        raise e
 
 
 @app.get("/clan/{tag}")
