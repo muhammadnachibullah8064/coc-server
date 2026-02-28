@@ -88,8 +88,6 @@ def get_clan(tag: str):
 
 
 # ---------------- current war ----------------
-
-
 @app.get("/currentwar/{tag}")
 def get_current_war(tag: str):
     tag_norm = normalize_tag(tag)
@@ -105,9 +103,37 @@ def get_current_war(tag: str):
         raise e
 
 
+# ---------------- CWL group ----------------
+@app.get("/cwl/{tag}")
+def get_cwl_group(tag: str):
+    tag_norm = normalize_tag(tag)
+
+    try:
+        data = coc_get(f"/clans/{tag_norm}/currentwar/leaguegroup")
+        return JSONResponse(data)
+
+    except HTTPException as e:
+        if e.status_code == 404:
+            return {"state": "notInCWL"}
+        raise e
+
+
+# ---------------- War History ----------------
+@app.get("/warlog/{tag}")
+def get_warlog(tag: str):
+    tag_norm = normalize_tag(tag)
+
+    try:
+        data = coc_get(f"/clans/{tag_norm}/warlog")
+        return JSONResponse(data)
+
+    except HTTPException as e:
+        if e.status_code == 404:
+            return {"state": "noWarLog"}
+        raise e
+
+
 # ---------------- hero routes ----------------
-
-
 @app.get("/hero/{tag}")
 def get_hero(tag: str):
     tag_norm = normalize_tag(tag)
