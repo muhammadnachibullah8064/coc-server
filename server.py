@@ -1,6 +1,6 @@
 import os
 import requests
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
 
