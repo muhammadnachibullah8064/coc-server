@@ -66,10 +66,8 @@ def coc_get(path: str):
 
 
 # ---------------- routes ----------------
-
-
-@app.get("/health")
-def health():
+@app.api_route("/health", methods=["GET", "HEAD"])
+def health(request: Request):
     return {"status": "ok"}
 
 
@@ -97,6 +95,7 @@ def get_top_players(location: str):
         raise e
 
 
+# ---------------- clan ----------------
 @app.get("/clan/{tag}")
 def get_clan(tag: str):
     tag = normalize_tag(tag)
