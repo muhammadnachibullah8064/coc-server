@@ -71,6 +71,16 @@ def health(request: Request):
     return {"status": "ok"}
 
 
+# ---------------- Locations ----------------
+@app.get("/locations")
+def get_locations():
+    try:
+        data = coc_get("/locations")
+        return JSONResponse(data)
+    except HTTPException as e:
+        raise e
+
+
 # ---------------- Players ----------------
 @app.get("/player/{tag}")
 def get_player(tag: str):
