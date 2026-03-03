@@ -136,7 +136,7 @@ def get_top_builder_clans(location: str):
     location = location.strip().lower()
 
     try:
-        data = coc_get(f"/locations/{location}/rankings/builder-Base-Clans")
+        data = coc_get(f"/locations/{location}/rankings/Clans-builder-base")
         return JSONResponse(data)
 
     except HTTPException as e:
