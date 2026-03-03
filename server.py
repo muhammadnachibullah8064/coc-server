@@ -112,7 +112,7 @@ def get_top_builder_players(location: str):
     location = location.strip().lower()
 
     try:
-        data = coc_get(f"/locations/{location}/rankings/builderBasePlayers")
+        data = coc_get(f"/locations/{location}/rankings/players-builder-base")
         return JSONResponse(data)
 
     except HTTPException as e:
