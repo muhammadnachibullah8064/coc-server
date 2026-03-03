@@ -89,7 +89,7 @@ def get_player(tag: str):
     return JSONResponse(data)
 
 
-# ---------------- Top Players ----------------
+# ---------------- Top Home Village Players ----------------
 @app.get("/top/players/{location}")
 def get_top_players(location: str):
 
@@ -105,12 +105,44 @@ def get_top_players(location: str):
         raise e
 
 
+# ---------------- Top Builder Base Players ----------------
+@app.get("/top/builder/players/{location}")
+def get_top_builder_players(location: str):
+
+    location = location.strip().lower()
+
+    try:
+        data = coc_get(f"/locations/{location}/rankings/builderBasePlayers")
+        return JSONResponse(data)
+
+    except HTTPException as e:
+        if e.status_code == 404:
+            return {"error": "Invalid location or no data"}
+        raise e
+
+
 # ---------------- clan ----------------
 @app.get("/clan/{tag}")
 def get_clan(tag: str):
     tag = normalize_tag(tag)
     data = coc_get(f"/clans/{tag}")
     return JSONResponse(data)
+
+
+# ---------------- Top Builder Base Clans ----------------
+@app.get("/top/builder/clans/{location}")
+def get_top_builder_clans(location: str):
+
+    location = location.strip().lower()
+
+    try:
+        data = coc_get(f"/locations/{location}/rankings/builderBaseClans")
+        return JSONResponse(data)
+
+    except HTTPException as e:
+        if e.status_code == 404:
+            return {"error": "Invalid location or no data"}
+        raise e
 
 
 # ---------------- current war ----------------
@@ -141,6 +173,36 @@ def get_cwl_group(tag: str):
     except HTTPException as e:
         if e.status_code == 404:
             return {"state": "notInCWL"}
+        raise e
+
+
+# ---------------- CWL War By Tag ----------------
+@app.get("/cwl/war/{warTag}")
+def get_cwl_war(warTag: str):
+    try:
+        # warTag already looks like #ABC123
+        warTag = normalize_tag(warTag)
+        data = coc_get(f"/clanwarleagues/wars/{warTag}")
+        return JSONResponse(data)
+
+    except HTTPException as e:
+        if e.status_code == 404:
+            return {"error": "War not found"}
+        raise e
+
+
+# ---------------- Clan Capital Raid Log ----------------
+@app.get("/raid/{tag}")
+def get_raid_log(tag: str):
+    tag_norm = normalize_tag(tag)
+
+    try:
+        data = coc_get(f"/clans/{tag_norm}/capitalraidseasons")
+        return JSONResponse(data)
+
+    except HTTPException as e:
+        if e.status_code == 404:
+            return {"error": "No raid data"}
         raise e
 
 
