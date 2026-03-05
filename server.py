@@ -80,10 +80,15 @@ def cleanup_chat(key: str):
     if key != CLEANUP_KEY:
         return {"error": "unauthorized"}
 
-    delete_old_global_messages()
-    delete_old_clan_messages()
+    g = delete_old_global_messages()
+    c = delete_old_clan_messages()
 
-    return {"status": "cleanup done"}
+    return {
+        "status": "cleanup done",
+        "global_deleted": g,
+        "clan_deleted": c,
+        "total_deleted": g + c,
+    }
 
 
 # ---------------- Locations ----------------

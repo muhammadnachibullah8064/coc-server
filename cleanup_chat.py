@@ -61,14 +61,25 @@ def delete_old_clan_messages():
     return deleted
 
 
-# ---------- MAIN ----------
+# ---------- MAIN CLEANUP ----------
 def run_cleanup():
+
     print("Running Firestore chat cleanup...")
 
-    g = delete_old_global_messages()
-    c = delete_old_clan_messages()
+    global_deleted = delete_old_global_messages()
+    clan_deleted = delete_old_clan_messages()
 
-    print(f"Cleanup finished. Global={g}, Clan={c}")
+    total = global_deleted + clan_deleted
+
+    result = {
+        "global_deleted": global_deleted,
+        "clan_deleted": clan_deleted,
+        "total_deleted": total,
+    }
+
+    print(result)
+
+    return result
 
 
 if __name__ == "__main__":
