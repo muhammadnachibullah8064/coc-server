@@ -71,6 +71,16 @@ def health(request: Request):
     return {"status": "ok"}
 
 
+# ---------------- firestore clean ----------------
+@app.get("/cleanup")
+def cleanup_chat():
+
+    delete_old_global_messages()
+    delete_old_clan_messages()
+
+    return {"status": "cleanup done"}
+
+
 # ---------------- Locations ----------------
 @app.get("/locations")
 def get_locations():
