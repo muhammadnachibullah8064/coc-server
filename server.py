@@ -73,7 +73,10 @@ def health(request: Request):
 
 # ---------------- firestore clean ----------------
 @app.get("/cleanup")
-def cleanup_chat():
+def cleanup_chat(key: str):
+
+    if key != CLEANUP_KEY:
+        return {"error": "unauthorized"}
 
     delete_old_global_messages()
     delete_old_clan_messages()
