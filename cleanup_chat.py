@@ -1,10 +1,18 @@
+import os
+import json
 from datetime import datetime, timedelta, timezone
+
 import firebase_admin
 from firebase_admin import credentials, firestore
 
-# ---------- FIREBASE INIT ----------
-cred = credentials.Certificate("serviceAccountKey.json")
-firebase_admin.initialize_app(cred)
+
+# ---------- FIREBASE INIT (FROM ENV VARIABLE) ----------
+firebase_json = json.loads(os.getenv("FIREBASE_SERVICE_ACCOUNT"))
+
+cred = credentials.Certificate(firebase_json)
+
+if not firebase_admin._apps:
+    firebase_admin.initialize_app(cred)
 
 db = firestore.client()
 
@@ -23,6 +31,8 @@ def delete_old_global_messages():
 
     print(f"[GLOBAL] Deleted {deleted} old messages")
 
+    return deleted
+
 
 # ---------- DELETE CLAN MESSAGES (30 DAYS) ----------
 def delete_old_clan_messages():
@@ -33,6 +43,7 @@ def delete_old_clan_messages():
     deleted = 0
 
     for clan in clans:
+
         messages = (
             db.collection("clans")
             .document(clan.id)
@@ -47,15 +58,17 @@ def delete_old_clan_messages():
 
     print(f"[CLAN] Deleted {deleted} old messages")
 
+    return deleted
+
 
 # ---------- MAIN ----------
 def run_cleanup():
     print("Running Firestore chat cleanup...")
 
-    delete_old_global_messages()
-    delete_old_clan_messages()
+    g = delete_old_global_messages()
+    c = delete_old_clan_messages()
 
-    print("Cleanup finished.")
+    print(f"Cleanup finished. Global={g}, Clan={c}")
 
 
 if __name__ == "__main__":
