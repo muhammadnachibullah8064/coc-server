@@ -3,10 +3,12 @@ import requests
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from dotenv import load_dotenv
+from cleanup_chat import delete_old_global_messages, delete_old_clan_messages
+
 
 # load env
 load_dotenv()
-
+CLEANUP_KEY = os.getenv("CLEANUP_KEY")
 COC_TOKEN = os.getenv("COC_API_TOKEN")
 if not COC_TOKEN:
     raise RuntimeError("COC_API_TOKEN not found in .env")
