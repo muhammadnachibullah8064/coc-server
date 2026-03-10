@@ -148,6 +148,21 @@ def get_clan(tag: str):
     data = coc_get(f"/clans/{tag}")
     return JSONResponse(data)
 
+# ---------------- Top Home Village Clans ----------------
+@app.get("/top/clans/{location}")
+def get_top_clans(location: str):
+
+    location = location.strip().lower()
+
+    try:
+        data = coc_get(f"/locations/{location}/rankings/clans")
+        return JSONResponse(data)
+
+    except HTTPException as e:
+        if e.status_code == 404:
+            return {"error": "Invalid location or no data"}
+        raise e
+
 
 # ---------------- Top Builder Base Clans ----------------
 @app.get("/top/builder/clans/{location}")
