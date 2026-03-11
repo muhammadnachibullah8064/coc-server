@@ -17,49 +17,66 @@ HEADERS = {
 }
 
 
-# ---------- GET ACTIVE PLAYER LOCATIONS ----------
+# ---------- GET PLAYER LOCATION LIST ----------
 @router.get("/locations/active/players")
 def active_player_locations():
 
-    doc = db.collection("config").document("active_player_locations").get()
+    doc = db.collection("config").document("location_scan").get()
 
     if not doc.exists:
-        return {"count": 0, "locations": []}
+        return {
+            "active_count": 0,
+            "empty_count": 0,
+            "active": [],
+            "empty": []
+        }
 
-    data = doc.to_dict().get("locations", [])
+    data = doc.to_dict()
 
     return {
-        "count": len(data),
-        "locations": data
+        "active_count": len(data.get("player_active", [])),
+        "empty_count": len(data.get("player_empty", [])),
+        "active": data.get("player_active", []),
+        "empty": data.get("player_empty", [])
     }
 
 
-# ---------- GET ACTIVE CLAN LOCATIONS ----------
+# ---------- GET CLAN LOCATION LIST ----------
 @router.get("/locations/active/clans")
 def active_clan_locations():
 
-    doc = db.collection("config").document("active_clan_locations").get()
+    doc = db.collection("config").document("location_scan").get()
 
     if not doc.exists:
-        return {"count": 0, "locations": []}
+        return {
+            "active_count": 0,
+            "empty_count": 0,
+            "active": [],
+            "empty": []
+        }
 
-    data = doc.to_dict().get("locations", [])
+    data = doc.to_dict()
 
     return {
-        "count": len(data),
-        "locations": data
+        "active_count": len(data.get("clan_active", [])),
+        "empty_count": len(data.get("clan_empty", [])),
+        "active": data.get("clan_active", []),
+        "empty": data.get("clan_empty", [])
     }
 
 
-# ---------- SCAN ACTIVE LOCATIONS ----------
+# ---------- SCAN LOCATIONS ----------
 @router.get("/locations/active/scan")
 def scan_active_locations():
 
     r = requests.get(f"{BASE}/locations", headers=HEADERS, timeout=10)
     locations = r.json().get("items", [])
 
-    active_players = []
-    active_clans = []
+    player_active = []
+    player_empty = []
+
+    clan_active = []
+    clan_empty = []
 
     for loc in locations:
 
@@ -75,13 +92,21 @@ def scan_active_locations():
             ).json()
 
             if data.get("items"):
-                active_players.append({
+                player_active.append({
+                    "id": loc_id,
+                    "name": loc_name
+                })
+            else:
+                player_empty.append({
                     "id": loc_id,
                     "name": loc_name
                 })
 
         except:
-            pass
+            player_empty.append({
+                "id": loc_id,
+                "name": loc_name
+            })
 
         # ----- CLAN CHECK -----
         try:
@@ -92,25 +117,38 @@ def scan_active_locations():
             ).json()
 
             if data.get("items"):
-                active_clans.append({
+                clan_active.append({
+                    "id": loc_id,
+                    "name": loc_name
+                })
+            else:
+                clan_empty.append({
                     "id": loc_id,
                     "name": loc_name
                 })
 
         except:
-            pass
+            clan_empty.append({
+                "id": loc_id,
+                "name": loc_name
+            })
 
-    # 🔥 Save to Firestore
-    db.collection("config").document("active_player_locations").set({
-        "locations": active_players
-    })
+    # 🔥 Save everything in ONE document
+    db.collection("config").document("location_scan").set({
 
-    db.collection("config").document("active_clan_locations").set({
-        "locations": active_clans
+        "player_active": player_active,
+        "player_empty": player_empty,
+
+        "clan_active": clan_active,
+        "clan_empty": clan_empty
     })
 
     return {
         "status": "scan complete",
-        "player_locations": len(active_players),
-        "clan_locations": len(active_clans)
+
+        "player_active": len(player_active),
+        "player_empty": len(player_empty),
+
+        "clan_active": len(clan_active),
+        "clan_empty": len(clan_empty)
     }
