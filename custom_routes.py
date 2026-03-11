@@ -1,8 +1,8 @@
 from fastapi import APIRouter
-import json
 import requests
 import os
 from dotenv import load_dotenv
+from firestore_db import db
 
 router = APIRouter()
 
@@ -18,14 +18,19 @@ HEADERS = {
 
 
 # ---------- GET SAVED ACTIVE LOCATIONS ----------
+# Firestore থেকে active location list পড়বে
 @router.get("/locations/active")
 def active_locations():
 
-    try:
-        with open("active_locations.json") as f:
-            data = json.load(f)
-    except FileNotFoundError:
-        data = []
+    doc = db.collection("config").document("active_locations").get()
+
+    if not doc.exists:
+        return {
+            "count": 0,
+            "locations": []
+        }
+
+    data = doc.to_dict().get("locations", [])
 
     return {
         "count": len(data),
@@ -34,6 +39,7 @@ def active_locations():
 
 
 # ---------- SCAN ACTIVE LOCATIONS ----------
+# Supercell API scan করে active locations Firestore এ save করবে
 @router.get("/locations/active/scan")
 def scan_active_locations():
 
@@ -62,8 +68,10 @@ def scan_active_locations():
         except:
             continue
 
-    with open("active_locations.json", "w") as f:
-        json.dump(active, f)
+    # 🔥 Firestore save
+    db.collection("config").document("active_locations").set({
+        "locations": active
+    })
 
     return {
         "status": "scan complete",
