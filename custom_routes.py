@@ -17,18 +17,31 @@ HEADERS = {
 }
 
 
-# ---------- GET SAVED ACTIVE LOCATIONS ----------
-# Firestore থেকে active location list পড়বে
-@router.get("/locations/active")
-def active_locations():
+# ---------- GET ACTIVE PLAYER LOCATIONS ----------
+@router.get("/locations/active/players")
+def active_player_locations():
 
-    doc = db.collection("config").document("active_locations").get()
+    doc = db.collection("config").document("active_player_locations").get()
 
     if not doc.exists:
-        return {
-            "count": 0,
-            "locations": []
-        }
+        return {"count": 0, "locations": []}
+
+    data = doc.to_dict().get("locations", [])
+
+    return {
+        "count": len(data),
+        "locations": data
+    }
+
+
+# ---------- GET ACTIVE CLAN LOCATIONS ----------
+@router.get("/locations/active/clans")
+def active_clan_locations():
+
+    doc = db.collection("config").document("active_clan_locations").get()
+
+    if not doc.exists:
+        return {"count": 0, "locations": []}
 
     data = doc.to_dict().get("locations", [])
 
@@ -39,19 +52,21 @@ def active_locations():
 
 
 # ---------- SCAN ACTIVE LOCATIONS ----------
-# Supercell API scan করে active locations Firestore এ save করবে
 @router.get("/locations/active/scan")
 def scan_active_locations():
 
     r = requests.get(f"{BASE}/locations", headers=HEADERS, timeout=10)
     locations = r.json().get("items", [])
 
-    active = []
+    active_players = []
+    active_clans = []
 
     for loc in locations:
 
         loc_id = loc["id"]
+        loc_name = loc["name"]
 
+        # ----- PLAYER CHECK -----
         try:
             data = requests.get(
                 f"{BASE}/locations/{loc_id}/rankings/players",
@@ -60,20 +75,42 @@ def scan_active_locations():
             ).json()
 
             if data.get("items"):
-                active.append({
+                active_players.append({
                     "id": loc_id,
-                    "name": loc["name"]
+                    "name": loc_name
                 })
 
         except:
-            continue
+            pass
 
-    # 🔥 Firestore save
-    db.collection("config").document("active_locations").set({
-        "locations": active
+        # ----- CLAN CHECK -----
+        try:
+            data = requests.get(
+                f"{BASE}/locations/{loc_id}/rankings/clans",
+                headers=HEADERS,
+                timeout=10
+            ).json()
+
+            if data.get("items"):
+                active_clans.append({
+                    "id": loc_id,
+                    "name": loc_name
+                })
+
+        except:
+            pass
+
+    # 🔥 Save to Firestore
+    db.collection("config").document("active_player_locations").set({
+        "locations": active_players
+    })
+
+    db.collection("config").document("active_clan_locations").set({
+        "locations": active_clans
     })
 
     return {
         "status": "scan complete",
-        "active_count": len(active)
+        "player_locations": len(active_players),
+        "clan_locations": len(active_clans)
     }
