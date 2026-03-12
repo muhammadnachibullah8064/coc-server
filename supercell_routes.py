@@ -180,14 +180,14 @@ def get_top_builder_clans(location: str):
         raise e
 
 
-# ---------------- Top CWL Clans ----------------
-@app.get("/top/cwl/clans/{location}")
-def get_top_cwl_clans(location: str):
+# ---------------- Top Clan Capital Clans ----------------
+@app.get("/top/capital/clans/{location}")
+def get_top_capital_clans(location: str):
 
     location = location.strip().lower()
 
     try:
-        data = coc_get(f"/locations/{location}/rankings/clanwarleagues")
+        data = coc_get(f"/locations/{location}/rankings/capitals")
         return JSONResponse(data)
 
     except HTTPException as e:
