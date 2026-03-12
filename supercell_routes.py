@@ -180,6 +180,23 @@ def get_top_builder_clans(location: str):
         raise e
 
 
+# ---------------- Top CWL Clans ----------------
+@app.get("/top/cwl/clans/{location}")
+@app.get("/top/cwl/clans")
+def get_top_cwl_clans(location: str = "global"):
+
+    location = location.strip().lower()
+
+    try:
+        data = coc_get(f"/locations/{location}/rankings/clanwarleagues")
+        return JSONResponse(data)
+
+    except HTTPException as e:
+        if e.status_code == 404:
+            return {"error": "Invalid location or no data"}
+        raise e
+
+
 # ---------------- current war ----------------
 @app.get("/currentwar/{tag}")
 def get_current_war(tag: str):
