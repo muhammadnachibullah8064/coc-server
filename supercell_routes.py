@@ -182,8 +182,7 @@ def get_top_builder_clans(location: str):
 
 # ---------------- Top CWL Clans ----------------
 @app.get("/top/cwl/clans/{location}")
-@app.get("/top/cwl/clans")
-def get_top_cwl_clans(location: str = "global"):
+def get_top_cwl_clans(location: str):
 
     location = location.strip().lower()
 
