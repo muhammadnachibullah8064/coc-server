@@ -148,6 +148,7 @@ def get_clan(tag: str):
     data = coc_get(f"/clans/{tag}")
     return JSONResponse(data)
 
+
 # ---------------- Top Home Village Clans ----------------
 @app.get("/top/clans/{location}")
 def get_top_clans(location: str):
@@ -242,19 +243,44 @@ def get_cwl_war(warTag: str):
         raise e
 
 
-# ---------------- Clan Capital Raid Log ----------------
-@app.get("/raid/{tag}")
-def get_raid_log(tag: str):
-    tag_norm = normalize_tag(tag)
+# ---------------- Current Raid ----------------
+# Clan এর চলমান (ongoing) raid weekend data ফেরত দেয়
+@app.get("/raid/current/{tag}")
+def get_current_raid(tag: str):
 
-    try:
-        data = coc_get(f"/clans/{tag_norm}/capitalraidseasons")
-        return JSONResponse(data)
+    # tag normalize (#ABC123 → %23ABC123)
+    tag = normalize_tag(tag)
 
-    except HTTPException as e:
-        if e.status_code == 404:
-            return {"error": "No raid data"}
-        raise e
+    # Supercell API call
+    data = coc_get(f"/clans/{tag}/capitalraidseasons")
+
+    # items এর ভিতরে raid list থাকে
+    for raid in data.get("items", []):
+
+        # শুধু ongoing raid খুঁজবে
+        if raid.get("state") == "ongoing":
+            return raid
+
+    # যদি কোনো raid চলমান না থাকে
+    return {"state": "noCurrentRaid"}
+
+
+# ---------------- Raid History ----------------
+# Clan এর শেষ হওয়া (ended) raid weekend history ফেরত দেয়
+@app.get("/raid/history/{tag}")
+def get_raid_history(tag: str):
+
+    # tag normalize (#ABC123 → %23ABC123)
+    tag = normalize_tag(tag)
+
+    # Supercell API call
+    data = coc_get(f"/clans/{tag}/capitalraidseasons")
+
+    # শুধু ended raid গুলো filter করা
+    ended_raids = [raid for raid in data.get("items", []) if raid.get("state") == "ended"]
+
+    # history response
+    return {"count": len(ended_raids), "items": ended_raids}
 
 
 # ---------------- War History ----------------
