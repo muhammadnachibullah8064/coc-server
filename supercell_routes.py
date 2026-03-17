@@ -329,9 +329,10 @@ _HERO_DATA = load_hero_data()
 HOME_HEROES = [
     "Barbarian King",
     "Archer Queen",
+    "Minion Prince",
     "Grand Warden",
     "Royal Champion",
-    "Minion Prince",
+    "Dragon Duke",
 ]
 
 BUILDER_HEROES = [
