@@ -76,7 +76,7 @@ def coc_get(path: str):
     max_retries = len(TOKENS)
 
     for _ in range(max_retries):
-        headers = get_headers()  # 🔥 এখানে বসলো
+        headers = get_headers()
 
         r = requests.get(url, headers=headers, timeout=15)
 
@@ -84,11 +84,16 @@ def coc_get(path: str):
         if r.status_code == 200:
             return r.json()
 
-        # ⚠️ rate limit → next token try
-        if r.status_code == 429:
-            continue
+        # 🔥 শুধু invalid IP হলে next token
+        if r.status_code == 403:
+            try:
+                data = r.json()
+                if data.get("reason") == "accessDenied.invalidIp":
+                    continue
+            except:
+                pass
 
-        # ❌ other error
+        # ❌ অন্য error হলে stop
         raise HTTPException(
             status_code=r.status_code,
             detail=(
@@ -98,8 +103,8 @@ def coc_get(path: str):
             ),
         )
 
-    # ❌ সব token শেষ
-    raise HTTPException(status_code=429, detail="All tokens rate-limited")
+    # ❌ সব token invalid IP
+    raise HTTPException(status_code=403, detail="All tokens failed بسبب invalid IP")
 
 
 # ---------------- routes ----------------
