@@ -72,8 +72,23 @@ def normalize_tag(tag: str) -> str:
 
 def coc_get(path: str):
     url = f"{COC_BASE}{path}"
-    r = requests.get(url, headers=HEADERS, timeout=15)
-    if r.status_code != 200:
+
+    max_retries = len(TOKENS)
+
+    for _ in range(max_retries):
+        headers = get_headers()  # 🔥 এখানে বসলো
+
+        r = requests.get(url, headers=headers, timeout=15)
+
+        # ✅ success
+        if r.status_code == 200:
+            return r.json()
+
+        # ⚠️ rate limit → next token try
+        if r.status_code == 429:
+            continue
+
+        # ❌ other error
         raise HTTPException(
             status_code=r.status_code,
             detail=(
@@ -82,7 +97,9 @@ def coc_get(path: str):
                 else r.text
             ),
         )
-    return r.json()
+
+    # ❌ সব token শেষ
+    raise HTTPException(status_code=429, detail="All tokens rate-limited")
 
 
 # ---------------- routes ----------------
