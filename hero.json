@@ -449,6 +449,32 @@
     "94": { "days": 8, "hours": 0, "dark": 430000 },
     "95": { "days": 8, "hours": 0, "dark": 450000 }
   },
+  "Dragon Duke":{
+    "1": { "days": 0, "hours": 0, "dark": 0 },
+    "2": { "days": 0, "hours": 6, "dark": 50000 },
+    "3": { "days": 0, "hours": 12, "dark": 60000 },
+    "4": { "days": 1, "hours": 0, "dark": 70000 },
+    "5": { "days": 1, "hours": 0, "dark": 80000 },
+    "6": { "days": 2, "hours": 0, "dark": 90000 },
+    "7": { "days": 2, "hours": 0, "dark": 100000 },
+    "8": { "days": 2, "hours": 0, "dark": 110000 },
+    "9": { "days": 3, "hours": 0, "dark": 120000 },
+    "10": { "days": 3, "hours": 0, "dark": 130000 },
+    "11": { "days": 4, "hours": 0, "dark": 150000 },
+    "12": { "days": 5, "hours": 0, "dark": 175000 },
+    "13": { "days": 5, "hours": 0, "dark": 200000 },
+    "14": { "days": 6, "hours": 0, "dark": 225000 },
+    "15": { "days": 6, "hours": 0, "dark": 250000 },
+    "16": { "days": 7, "hours": 0, "dark": 275000 },
+    "17": { "days": 7, "hours": 0, "dark": 300000 },
+    "18": { "days": 8, "hours": 0, "dark": 325000 },
+    "19": { "days": 8, "hours": 0, "dark": 350000 },
+    "20": { "days": 8, "hours": 0, "dark": 375000 },
+    "21": { "days": 8, "hours": 0, "dark": 400000 },
+    "22": { "days": 8, "hours": 0, "dark": 420000 },
+    "23": { "days": 8, "hours": 0, "dark": 440000 },
+    "24": { "days": 8, "hours": 0, "dark": 460000 },
+    "25": { "days": 8, "hours": 0, "dark": 480000 },
 
   "Battle Machine": {
     "1": { "days": 0, "hours": 12, "builder_elixir": 9000000 },
@@ -524,4 +550,5 @@
     "34": { "days": 7, "hours": 0, "builder_elixir": 4400000 },
     "35": { "days": 7, "hours": 0, "builder_elixir": 4500000 }
   }
+}
 }

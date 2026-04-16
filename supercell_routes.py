@@ -9,16 +9,34 @@ from cleanup_chat import delete_old_global_messages, delete_old_clan_messages
 # load env
 load_dotenv()
 CLEANUP_KEY = os.getenv("CLEANUP_KEY")
+
 COC_TOKEN = os.getenv("COC_API_TOKEN")
 if not COC_TOKEN:
     raise RuntimeError("COC_API_TOKEN not found in .env")
 
+# 🔥 split tokens
+TOKENS = [t.strip() for t in COC_TOKEN.split(",") if t.strip()]
+
 COC_BASE = "https://api.clashofclans.com/v1"
 
-HEADERS = {
-    "Accept": "application/json",
-    "Authorization": f"Bearer {COC_TOKEN}",
-}
+# 🔥 token index
+token_index = 0
+
+
+def get_token():
+    global token_index
+    token = TOKENS[token_index]
+    token_index = (token_index + 1) % len(TOKENS)
+    return token
+
+
+# 🔥 dynamic headers (আগের static না)
+def get_headers():
+    return {
+        "Accept": "application/json",
+        "Authorization": f"Bearer {get_token()}",
+    }
+
 
 app = FastAPI(
     title="COC Mini Server",
